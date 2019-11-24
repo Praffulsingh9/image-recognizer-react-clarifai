@@ -22,7 +22,7 @@ const particlesOptions = {
 };
 
 const app = new Clarifai.App({
-  apiKey: "a368369741bc4ff7b1dd8b8e4cb3ad80"
+  apiKey: "YOUR API KEY"
 });
 
 class App extends Component {
@@ -40,6 +40,16 @@ class App extends Component {
       joined: ""
     }
   };
+
+loadUser = (data) => {
+    this.setState({user: {
+      id: data.id,
+      name: data.name,
+      email: data.email,
+      entries: data.entries,
+      joined: data.joined
+    }})
+  }
 
 
   calculateFaceLocation = (data) => {
