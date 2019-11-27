@@ -21,9 +21,6 @@ const particlesOptions = {
   }
 };
 
-const app = new Clarifai.App({
-  apiKey: "a368369741bc4ff7b1dd8b8e4cb3ad80"
-});
 
 class App extends Component {
   state = {
@@ -40,6 +37,16 @@ class App extends Component {
       joined: ""
     }
   };
+
+loadUser = (data) => {
+    this.setState({user: {
+      id: data.id,
+      name: data.name,
+      email: data.email,
+      entries: data.entries,
+      joined: data.joined
+    }})
+  }
 
 
   calculateFaceLocation = (data) => {
@@ -65,10 +72,14 @@ class App extends Component {
 
   onButtonSubmit = () => {
     this.setState({imageUrl: this.state.input});
-    app.models
-      .predict(
-        Clarifai.FACE_DETECT_MODEL,
-        this.state.input)
+      fetch('http://localhost:3000/imageurl', {
+        method: 'post',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+          input: this.state.input
+        })
+      })
+      .then(response => response.json())
       .then(response => {
         if (response) {
           fetch('http://localhost:3000/image', {
@@ -82,6 +93,7 @@ class App extends Component {
             .then(count => {
               this.setState(Object.assign(this.state.user, { entries: count}))
             })
+            .catch(console.log)
 
         }
         this.displayFaceBox(this.calculateFaceLocation(response))
